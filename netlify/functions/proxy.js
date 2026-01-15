@@ -4,7 +4,11 @@ exports.handler = async (event, context) => {
     const originalBaseUrl = process.env.ORIGINAL_URL || 'https://httpbin.org/ip';
     
     // Construct the full URL by appending the path and query string
-    const path = event.path || '';
+    // Remove the function path from the request path
+    const functionPath = '/.netlify/functions/proxy';
+    const path = (event.path || '').startsWith(functionPath) 
+        ? (event.path || '').substring(functionPath.length) || '/'
+        : (event.path || '');
     const queryString = event.queryStringParameters || {};
     const query = Object.keys(queryString).length > 0 
         ? '?' + Object.keys(queryString).map(key => `${key}=${queryString[key]}`).join('&')
