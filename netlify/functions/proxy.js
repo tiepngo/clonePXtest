@@ -1,3 +1,6 @@
+const https = require('https');
+const { HttpsProxyAgent } = require('https-proxy-agent');
+
 exports.handler = async (event, context) => {
     console.log('Proxy function called', event);
     console.log('event.path:', event.path);
@@ -17,14 +20,31 @@ exports.handler = async (event, context) => {
         : '';
     const fullUrl = `${originalBaseUrl}${path}${query}`;
     
-    console.log('Redirecting to:', fullUrl);
-    // Redirect to the original URL
+    console.log('Fetching from:', fullUrl);
+    
+    // Set up proxy agent if configured
+    let agent = null;
+    const proxyIp = process.env.PROXY_IP;
+    const proxyPort = process.env.PROXY_PORT;
+    const proxyUser = process.env.PROXY_USER;
+    const proxyPass = process.env.PROXY_PASS;
+    
+    if (proxyIp && proxyPort) {
+        const proxyUrl = proxyUser && proxyPass 
+            ? `http://${proxyUser}:${proxyPass}@${proxyIp}:${proxyPort}`
+            : `http://${proxyIp}:${proxyPort}`;
+        agent = new HttpsProxyAgent(proxyUrl);
+    }
+    
+    // Fetch the content
+    const response = await fetch(fullUrl, { agent });
+    const body = await response.text();
+    
+    console.log('Response status:', response.status);
+    // Return the response
     return {
-        statusCode: 302,
-        body: '',
-        headers: {
-            Location: fullUrl,
-            'Cache-Control': 'no-cache'
-            }
+        statusCode: response.status,
+        body: body,
+        headers: Object.fromEntries(response.headers.entries())
     };
 };
