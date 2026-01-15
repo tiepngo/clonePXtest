@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netlify Proxy App</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .proxy-link { background: #007acc; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; }
+        .proxy-link:hover { background: #005999; }
+    </style>
+</head>
+<body>
+    <h1>Netlify Proxy App</h1>
+    <p>This app proxies requests to a configurable target URL.</p>
+    <p><strong>Proxy endpoint:</strong> <a href="/.netlify/functions/proxy" class="proxy-link">/.netlify/functions/proxy</a></p>
+    <p>By default, it returns your IP address. Configure environment variables in Netlify dashboard to change the target URL and add proxy settings.</p>
+    <h2>Testing</h2>
+    <p>Click the link above or visit <code>https://boisterous-kelpie-5172c1.netlify.app/.netlify/functions/proxy</code> in your browser.</p>
+    <p>If proxy is configured, it will show your proxy's IP instead of Netlify's.</p>
+</body>
+</html>
