@@ -8,7 +8,7 @@ exports.handler = async (event, context) => {
     // Remove the function path from the request path
     const functionPath = '/.netlify/functions/proxy';
     const path = (event.path || '').startsWith(functionPath) 
-        ? (event.path || '').substring(functionPath.length) || '/'
+        ? (event.path || '').substring(functionPath.length)
         : (event.path || '');
     console.log('extracted path:', path);
     const queryString = event.queryStringParameters || {};
