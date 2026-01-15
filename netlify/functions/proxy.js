@@ -1,5 +1,6 @@
 exports.handler = async (event, context) => {
     console.log('Proxy function called', event);
+    console.log('event.path:', event.path);
     // Get the original URL from environment variable, with default
     const originalBaseUrl = process.env.ORIGINAL_URL || 'https://httpbin.org/ip';
     
@@ -9,6 +10,7 @@ exports.handler = async (event, context) => {
     const path = (event.path || '').startsWith(functionPath) 
         ? (event.path || '').substring(functionPath.length) || '/'
         : (event.path || '');
+    console.log('extracted path:', path);
     const queryString = event.queryStringParameters || {};
     const query = Object.keys(queryString).length > 0 
         ? '?' + Object.keys(queryString).map(key => `${key}=${queryString[key]}`).join('&')
