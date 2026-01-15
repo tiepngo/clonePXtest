@@ -37,14 +37,57 @@ exports.handler = async (event, context) => {
     }
     
     // Fetch the content
-    const response = await fetch(fullUrl, { agent });
-    const body = await response.text();
-    
-    console.log('Response status:', response.status);
-    // Return the response
-    return {
-        statusCode: response.status,
-        body: body,
-        headers: Object.fromEntries(response.headers.entries())
-    };
+    try {
+        const response = await fetch(fullUrl, { agent });
+        const body = await response.text();
+        
+        console.log('Response status:', response.status);
+        // Return the response
+        return {
+            statusCode: response.status,
+            body: body,
+            headers: Object.fromEntries(response.headers.entries())
+        };
+    } catch (error) {
+        console.error('Proxy connection failed:', error);
+        // Try to get current IP
+        let currentIp = 'Unknown';
+        try {
+            const ipResponse = await fetch('https://httpbin.org/ip');
+            const ipData = await ipResponse.json();
+            currentIp = ipData.origin;
+        } catch (ipError) {
+            console.error('Failed to get current IP:', ipError);
+        }
+        
+        // Return a warning page
+        return {
+            statusCode: 200,
+            body: `
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Proxy Connection Failed</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+        .error { color: red; }
+        .info { background: #f0f0f0; padding: 10px; margin: 20px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1 class="error">Proxy Connection Failed</h1>
+    <p>Unable to connect to the proxy server or fetch the requested content.</p>
+    <div class="info">
+        <p><strong>Current IP (Netlify):</strong> ${currentIp}</p>
+        <p><strong>Proxy IP:</strong> Not available (connection failed)</p>
+    </div>
+    <p>Please check your proxy settings and try again.</p>
+    <p>Original URL: ${fullUrl}</p>
+</body>
+</html>`,
+            headers: {
+                'Content-Type': 'text/html'
+            }
+        };
+    }
 };
