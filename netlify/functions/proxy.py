@@ -28,10 +28,7 @@ def handler(event, context):
             proxy_url = f"http://{proxy_ip}:{proxy_port}"
         proxies = {'http': proxy_url, 'https': proxy_url}
     
-    # Make the request to the original URL
-    response = requests.get(full_url, proxies=proxies)
-    
-    # Instead of returning the content, redirect to the original URL
+    # Instead of fetching, directly redirect to the original URL
     return {
         'statusCode': 302,
         'body': '',
