@@ -1,4 +1,5 @@
 exports.handler = async (event, context) => {
+    console.log('Proxy function called', event);
     // Get the original URL from environment variable, with default
     const originalBaseUrl = process.env.ORIGINAL_URL || 'https://httpbin.org/ip';
     
@@ -10,6 +11,7 @@ exports.handler = async (event, context) => {
         : '';
     const fullUrl = `${originalBaseUrl}${path}${query}`;
     
+    console.log('Redirecting to:', fullUrl);
     // Redirect to the original URL
     return {
         statusCode: 302,
@@ -17,4 +19,6 @@ exports.handler = async (event, context) => {
         headers: {
             Location: fullUrl,
             'Cache-Control': 'no-cache'
-    
+            }
+    };
+};
