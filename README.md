@@ -64,6 +64,13 @@ To test locally, install Netlify CLI:
 npm install -g netlify-cli
 ```
 
+Copy `.env.example` to `.env` and set your environment variables:
+
+```bash
+cp .env.example .env
+# Edit .env with your values
+```
+
 Then run:
 
 ```bash
