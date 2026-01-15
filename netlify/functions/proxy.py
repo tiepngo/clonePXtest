@@ -31,9 +31,12 @@ def handler(event, context):
     # Make the request to the original URL
     response = requests.get(full_url, proxies=proxies)
     
-    # Return the response
+    # Instead of returning the content, redirect to the original URL
     return {
-        'statusCode': response.status_code,
-        'body': response.text,
-        'headers': dict(response.headers)
+        'statusCode': 302,
+        'body': '',
+        'headers': {
+            'Location': full_url,
+            'Cache-Control': 'no-cache'
+        }
     }

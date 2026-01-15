@@ -43,16 +43,16 @@ Once deployed, the proxy will be available at:
 
 `https://your-netlify-site.netlify.app/.netlify/functions/proxy`
 
-Any requests to this URL will be forwarded to the original URL (set via `ORIGINAL_URL` environment variable), with the path and query parameters appended. If proxy settings are configured, the requests to the original URL will go through your specified proxy server.
+Accessing this URL will redirect you to the original URL (set via `ORIGINAL_URL` environment variable), with the path and query parameters appended. If proxy settings are configured, the redirect validation (if any) will use your specified proxy server.
 
-For example, if `ORIGINAL_URL` is set to `https://example.com`, a request to `https://your-netlify-site.netlify.app/.netlify/functions/proxy/some/path?param=value` will proxy to `https://example.com/some/path?param=value`.
+For example, if `ORIGINAL_URL` is set to `https://example.com`, a request to `https://your-netlify-site.netlify.app/.netlify/functions/proxy/some/path?param=value` will redirect to `https://example.com/some/path?param=value`.
 
 ## Testing the Proxy
 
 To verify that your proxy is working, the default `ORIGINAL_URL` is set to `https://httpbin.org/ip`, which returns your IP address in JSON format.
 
-- Without proxy: The response should show Netlify's IP address.
-- With proxy configured: The response should show your proxy server's IP address.
+- Without proxy: Accessing the proxy URL will redirect to httpbin.org/ip, showing Netlify's IP.
+- With proxy configured: The redirect will still go to httpbin.org/ip, but if your browser or the request uses the proxy, it may show different behavior. Note: The proxy settings affect the function's internal requests, not the client's redirect.
 
 You can change `ORIGINAL_URL` to any target URL as needed.
 
